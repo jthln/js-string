@@ -1,0 +1,26 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022-2026 Jürgen Thelen
+
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+IMAGE=js-string-dev
+COMMAND=${1:-}
+
+case "$COMMAND" in
+    build)
+        docker build -t "$IMAGE" "$ROOT_DIR"
+        docker run --rm -u "$(id -u):$(id -g)" -v "$ROOT_DIR:/app" "$IMAGE" composer install --no-interaction
+        exit 0
+        ;;
+    phpunit|phpcsfixer|phpcs|phpstan)
+        COMPOSER_COMMAND=$COMMAND
+        ;;
+    *)
+        printf 'Usage: %s {build|phpunit|phpcsfixer|phpcs|phpstan}\n' "$0" >&2
+        exit 2
+        ;;
+esac
+
+docker run --rm -u "$(id -u):$(id -g)" -v "$ROOT_DIR:/app" "$IMAGE" composer "$COMPOSER_COMMAND"

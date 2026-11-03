@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build development image and install dependencies
+        run: ./run build
+      - name: Unit tests
+        run: ./run phpunit
+      - name: PHP-CS-Fixer check
+        run: ./run phpcsfixer
+      - name: PHPCS
+        run: ./run phpcs
+      - name: PHPStan
+        run: ./run phpstan

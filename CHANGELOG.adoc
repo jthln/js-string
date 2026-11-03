@@ -1,0 +1,11 @@
+= Change Log
+
+This project adheres to [Semantic Versioning](http://semver.org/).
+
+Release heading is in the format [x.y.z] - YYYY-MM-DD.
+
+Each change line should contain a short description of the change.
+
+Ideally, this is in [conventional commit format](https://www.conventionalcommits.org/en/v1.0.0/#summary).
+
+Changes for specific issues shall contain the issue number, e.g. #1234.

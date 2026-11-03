@@ -1,0 +1,70 @@
+= Contributing
+
+Thanks for considering a contribution to `jthln/js-string`!
+
+This guide covers the local setup, checks, and pull-request process.
+
+== Get the code
+
+Fork the repository on GitHub, then clone your fork and add the original repository as `upstream`:
+
+[source,shell]
+----
+git clone https://github.com/YOUR-GITHUB-NAME/js-string.git
+cd js-string
+git remote add upstream https://github.com/jthln/js-string.git
+git fetch upstream
+git switch -c feature/short-description upstream/develop
+----
+
+The project uses `develop` as its integration branch. You do not need to install or use Git Flow; regular Git branches are fine.
+
+== Set up and run checks
+
+Docker provides PHP 8.3, Composer, and the required PHP extensions.
+
+Build the development image and install dependencies once:
+
+[source,shell]
+----
+./run build
+----
+
+Before submitting, run the checks:
+
+[source,shell]
+----
+./run phpunit
+./run phpcsfixer
+./run phpcs
+./run phpstan
+----
+
+`phpcsfixer` runs in dry-run mode and reports formatting differences without modifying files.
+
+Keep generated files such as `vendor/` and tool caches out of commits; `.gitignore` handles them.
+
+== Make a change
+
+* Keep changes focused and explain why the change is useful.
+* Add or update tests when behavior changes.
+* Preserve support for PHP 8.3 and the `ext-mbstring` requirement.
+* Document user-visible behavior or limitations when relevant.
+* Run the relevant checks before opening a pull request.
+
+Commit your changes on your feature branch, then push it to your fork:
+
+[source,shell]
+----
+git add path/to/changed/files
+git commit -m "Describe the change"
+git push -u origin feature/short-description
+----
+
+== Open a pull request
+
+Open a pull request from your fork's feature branch to the upstream repository's `develop` branch.
+
+In the description, summarize the change and include any relevant context or test notes. The GitHub Actions checks will run automatically.
+
+Please respond to review feedback and update the pull request branch as needed. A maintainer will review and merge contributions that are ready.

@@ -1,0 +1,102 @@
+= jthln/js-string
+
+This is a small PHP library for applying ES2022+ JavaScript-style string operations to UTF-8 text, especially where JavaScript's UTF-16 indexing differs from PHP's byte-based string functions.
+
+For example, JavaScript counts 😀 as two positions: `JsString::length('A😀B')` returns `4`, and searches and slices report positions in those same UTF-16 code units.
+
+The library also provides helpers for splitting, matching, replacing, trimming, and changing case.
+
+Main areas of application:
+
+* Reusing tests or business logic across JS and PHP where string behavior needs to line up.
+* Porting JavaScript string-processing code to a PHP backend while keeping its indexing behavior.
+* Matching string offsets between PHP and a JavaScript frontend. For example, when exchanging cursor positions, selections, or match locations.
+
+[source,php]
+----
+use Jthln\JsString\JsString;
+
+JsString::length('A😀B'); // 4, matching JavaScript's 'A😀B'.length
+JsString::charCodeAt('😀', 0); // 0xD83D
+JsString::slice('A😀B', 1, 3); // '😀'
+----
+
+== Available methods
+
+* `length`, `at`, `charAt`, `charCodeAt`, `codePointAt`
+* `split`, `substring`, `slice`
+* `indexOf`, `lastIndexOf`, `includes`
+* `fromCharCode`
+* `match`, `replace`
+* `trim`, `toLowerCase`, `toUpperCase`
+
+The regex helpers accept *delimited PCRE patterns*, not JavaScript regular-expression syntax.
+
+== UTF-16 and UTF-8 behavior
+
+Inputs are expected to be valid UTF-8.
+
+Methods that count or index use JavaScript UTF-16 code units, so a supplementary character such as an emoji occupies two positions.
+
+PHP cannot represent an isolated UTF-16 surrogate in valid UTF-8; methods that would return one expose it as U+FFFD instead.
+
+Consequently, this package provides practical UTF-16 indexing parity for valid UTF-8 text, not a complete JavaScript string runtime.
+
+`match` returns all PCRE matches as `{match, index}` records, with indexes in UTF-16 code units.
+
+`replace` replaces only the first PCRE match; callback replacements receive `(matchedText, utf16Index)`.
+
+String replacements use PHP's `preg_replace` replacement syntax.
+
+== Requirements and installation
+
+* PHP 8.3 or newer
+* `ext-mbstring`
+
+[source,shell]
+----
+composer require jthln/js-string
+----
+
+== Development with Docker
+
+The included Dockerfile provides PHP 8.3, `ext-mbstring`, and Composer 2.
+
+From the repository root, build the image and install Composer dependencies once:
+
+[source,shell]
+----
+./run build
+----
+
+Then run checks with `./run`:
+
+[source,shell]
+----
+./run phpunit     # check unit tests
+./run phpcsfixer  # check formatting without changing files (dry-run)
+./run phpcs       # check PSR-12 style
+./run phpstan     # analyze src/ and tests/
+----
+
+`./test` remains a shortcut for `./run phpunit`:
+
+[source,shell]
+----
+./test
+----
+
+After installing dependencies, run the development tools through Composer:
+
+[source,shell]
+----
+composer phpcsfixer   # check formatting without changing files
+composer phpcs        # check PSR-12 style
+composer phpstan      # analyze src/ and tests/
+----
+
+See link:CONTRIBUTING.adoc[CONTRIBUTING] for contributor setup, checks, and pull-request instructions.
+
+== License
+
+MIT. See link:LICENSE[LICENSE].

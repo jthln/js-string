@@ -1,0 +1,32 @@
+{
+  "name": "jthln/js-string",
+  "description": "JavaScript-like string helpers for UTF-8 PHP strings with UTF-16 indexing",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.3",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.75",
+    "phpstan/phpstan": "^2.1",
+    "squizlabs/php_codesniffer": "^3.13",
+    "phpunit/phpunit": "^10.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jthln\\JsString\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Jthln\\JsString\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "phpunit": "phpunit --testdox",
+    "phpcsfixer": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
+    "phpcs": "phpcs --standard=PSR12 -p src tests",
+    "phpstan": "phpstan analyse src tests --level 1"
+  }
+}
